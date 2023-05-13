@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import {StyledCastList, StyledCastItem, StyledImageCastWrapper, StyledCastImg, StyledTitleCast} from "./Cast.styled.js";
 
 import {getMovieCastInfo} from "../../services/theMovieDb-api";
 import {DEFAULT_PROFILE_IMG_PATH, IMG_DEFAULT_NO_PHOTO_PROFILE} from "../../defaultImages/defaultImage";
@@ -19,27 +20,27 @@ const Cast = () => {
 
     return(
     <div>
-        <ul>
+        <StyledCastList>
           {cast.length !== 0 
-          ?(cast.map(({name, character, profile_path, id}) => ( 
-            <li key={id}>
-                <div>
+            ?(cast.map(({name, character, profile_path, id}) => ( 
+              <StyledCastItem key={id}>
                   <div>
-                    <img src={profile_path ? `${DEFAULT_PROFILE_IMG_PATH}${profile_path}` : `${IMG_DEFAULT_NO_PHOTO_PROFILE}`} alt="actor" />
+                    <StyledImageCastWrapper>
+                      <StyledCastImg src={profile_path ? `${DEFAULT_PROFILE_IMG_PATH}${profile_path}` : `${IMG_DEFAULT_NO_PHOTO_PROFILE}`} alt="actor" />
+                    </StyledImageCastWrapper>
+                    <StyledTitleCast>
+                      {name}
+                    </StyledTitleCast>
+                    <p>
+                      {character}
+                    </p>
                   </div>
-                  <p>
-                    {name}
-                  </p>
-                  <p>
-                    {character}
-                  </p>
-                </div>
-            </li> 
-            ))
-          )
-          :(<p>We can't find cast</p>)
+              </StyledCastItem> 
+              ))
+            )
+            :(<p>We can't find information about cast</p>)
         }
-        </ul>
+        </StyledCastList>
     </div>
   )
 }

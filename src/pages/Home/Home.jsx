@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import {getTrendsMovies} from "../../services/theMovieDb-api"
 import MoviesList from "../../components/MoviesList"
+import {Title, ListSectionWrapper} from "./Home.styled"
 
 const Home = () => {
 
@@ -18,10 +19,10 @@ const Home = () => {
     },[]
   )
     return (
-      <div>
-        <h2>Trending today</h2>
+      <ListSectionWrapper>
+        <Title>Trending today</Title>
         {moviesArr.length !== 0 && <MoviesList moviesData={moviesArr}/>}
-      </div>
+      </ListSectionWrapper>
     );
   };
   

@@ -1,47 +1,58 @@
 import { useState, useEffect, Suspense } from "react";
-import { useParams, NavLink, Outlet, useLocation } from "react-router-dom";
+import {ReactComponent as BackLogo} from '../../defaultImages/return_up_back_icon.svg';
+import { useParams, Outlet, useLocation } from "react-router-dom";
 import { getMovieById } from "../../services/theMovieDb-api";
 
 import MovieCard from "../../components/MovieCard";
+import Loader from "../../components/Loader";
+
+import {MovieDetailsWrapper, DetailsWrapper, StyledLink, InfoStyledLink, StyledAddInfoWrapper} from "./MovieDetails.styled.js"
 
 const MovieDetails = () =>{
     const { movieId } = useParams();
     const [selectedMovie, setSelectedMovie] = useState(null);
+    const [status, setStatus]=useState('idle');
     
     const location = useLocation();
     const backLinkHref = location.state?.from ?? "/"
 
     useEffect(()=>{
-        function getSelectedMovie(){getMovieById(movieId)
-        .then(movie => {
-            movie.length === 0
-            ? console.log("We didn't find movies")
-            : setSelectedMovie(movie)
+        function getSelectedMovie(){
+            setStatus('pending');
+            getMovieById(movieId)
+            .then(movie => {
+                if(movie.length === 0){
+                    console.log("We didn't find movies");
+                    setStatus("rejected");
+                }else{
+                    setSelectedMovie(movie);
+                    setStatus("resolve");
+                }
           })};
           getSelectedMovie();
     },[movieId])
 
     return(
-        <div>
-            <NavLink to={backLinkHref}>Go Back</NavLink>
+        <MovieDetailsWrapper>
+            <StyledLink to={backLinkHref}><BackLogo width={"30px"} height={"30px"}/>Go Back</StyledLink>
+            {status === "pending" && <Loader/>}
             {selectedMovie && 
-                <div>
+                <DetailsWrapper>
                     <MovieCard movieData = {selectedMovie} />
-                    <p>Additional information</p>
-                    <ul>
-                        <li>
-                            <NavLink to="cast">Cast</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="reviews">Reviews</NavLink>
-                        </li>
-                    </ul>
-                    <Suspense fallback={<div>Subpage load...</div>}>
-                        <Outlet />
-                    </Suspense>
-                </div>
+                    <div className="AdditionalInfoSection">
+                        <h3>Additional information</h3>
+                        <StyledAddInfoWrapper>
+                            <InfoStyledLink to="cast">Cast</InfoStyledLink>
+                            <InfoStyledLink to="reviews">Reviews</InfoStyledLink>
+                        </StyledAddInfoWrapper>
+                        <Suspense fallback={<Loader/>}>
+                            <Outlet />
+                        </Suspense>
+                    </div>
+                </DetailsWrapper>
             }
-        </div>
+            {!selectedMovie || (status === "rejected" && <h3>Sorry, we didn't find information</h3>)}
+        </MovieDetailsWrapper>
     )
 }
 

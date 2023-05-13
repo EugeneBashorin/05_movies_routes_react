@@ -1,7 +1,7 @@
 const API_KEY = "5f18f730f6bdd06d8fd398ec26197a19";
-const baseURL = "https://api.themoviedb.org/3/"
+const baseURL = "https://api.themoviedb.org/3/";
 
-const trendsQueryUrl = "trending/movie/day"
+const trendsQueryUrl = "trending/movie/day";
 const urlMovieParameter  = "movie/";
 const urlQueryParameter ="search/movie";
 

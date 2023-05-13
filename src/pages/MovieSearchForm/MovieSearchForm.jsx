@@ -3,6 +3,9 @@ import { useSearchParams } from "react-router-dom";
 import { getMovieByQuery } from "../../services/theMovieDb-api.js"
 
 import MoviesList from "../../components/MoviesList";
+import { toast } from 'react-toastify';
+
+import {StyledForm, StyledInput, StyledButton, StyledMovieSearchForm} from "./MovieSearchForm.styled.js"
 
 const MovieSearchForm = () => {
 const [moviesArr, setMoviesArr] = useState([])
@@ -15,7 +18,7 @@ useEffect(()=>{
     getMovieByQuery(movieQuery)
     .then(results => {
           results.length === 0
-          ? console.log("We didn't find movies")
+          ? toast.error("We didn't find movies")
           : setMoviesArr(results);
       })
 },[movieQuery])
@@ -26,16 +29,16 @@ const handleSubmit = event => {
     setSearchParams({movieQuery: form.elements[0].value})
 }
 return(
-    <div>
-        <form onSubmit={handleSubmit}>
-            <input 
+    <StyledMovieSearchForm>
+        <StyledForm onSubmit={handleSubmit}>
+            <StyledInput 
                 type="text" 
                 name={movieQuery}
             />
-            <button type="submit">Search</button>
-        </form>
+            <StyledButton type="submit">Search</StyledButton>
+        </StyledForm>
         {moviesArr.length !== 0 && <MoviesList moviesData={moviesArr}/>}
-    </div>
+    </StyledMovieSearchForm>
   );
 };
 
